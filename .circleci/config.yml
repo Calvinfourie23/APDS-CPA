@@ -1,15 +1,13 @@
-# This config was automatically generated from your source code
-# Stacks detected: deps:node:.
 version: 2.1
 
 jobs:
   sonarqube:
     working_directory: ~/build
     docker:
-      - image: circleci/node:latest # Use a basic image with `find` command
+      - image: circleci/node:latest 
     steps:
       - checkout
-      - run: find . # This should work in the `circleci/node` image
+      - run: find . 
       - setup_remote_docker
       - run:
           name: Run SonarQube Scan
