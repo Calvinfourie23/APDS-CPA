@@ -1,0 +1,32 @@
+# This config was automatically generated from your source code
+# Stacks detected: deps:node:.
+version: 2.1
+
+jobs:
+  sonarqube:
+    working_directory: ~/build
+    docker:
+      - image: circleci/node:latest # Use a basic image with `find` command
+    steps:
+      - checkout
+      - run: find . # This should work in the `circleci/node` image
+      - setup_remote_docker
+      - run:
+          name: Run SonarQube Scan
+          command: |
+            docker run \
+              -e SONAR_TOKEN="${SONAR_TOKEN}" \
+              -e SONAR_HOST_URL="https://sonarcloud.io" \
+              -e SONAR_ORG="${SONAR_ORG}" \
+              -e SONAR_PROJECT_KEY="${SONAR_PROJECT_KEY}" \
+              sonarsource/sonar-scanner-cli \
+              sonar-scanner -Dsonar.sources="." \
+              -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
+              -Dsonar.organization="$SONAR_ORG" \
+              -Dsonar.host.url="https://sonarcloud.io" \
+              -Dsonar.login="$SONAR_TOKEN"
+
+workflows:
+  build-and-test:
+    jobs:
+      - sonarqube
